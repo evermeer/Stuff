@@ -110,6 +110,21 @@ print("Array of enums as dictionary:\n \(dict)")
 
 print("query = \(array.queryString))")
 ```
+The output is:
+
+```swift
+value = option1
+value = option2
+value = option3
+v1 = option4, test
+v2 = option5, 3
+v3 = option6, (4, "more")
+Array of enums as dictionary:
+["option5": 3, "option4": "test", "option6": (4, "more")]
+query = option4=test,option5=3,option6=(4, "more"))
+raw value = option2
+```
+
 
 ## License
 

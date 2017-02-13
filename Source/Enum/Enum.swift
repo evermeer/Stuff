@@ -56,12 +56,7 @@ public extension Enum where Self: Hashable {
      Return all enum values
      */
     public static var allValues: [Self] {
-        let mirror = Mirror(reflecting: self)
-        if mirror.displayStyle == .enum {
-            return Array(self.cases())
-        }
-        print("WARNING: You can only extend an enum with the EnumExtension")
-        return []
+        return Array(self.cases())
     }
     
     static func cases() -> AnySequence<Self> {
@@ -90,7 +85,7 @@ public extension RawEnum where Self: RawRepresentable {
         get {
             let mirror = Mirror(reflecting: self)
             if mirror.displayStyle != .enum {
-                print("WARNING: You can only extend an enum with the EnumExtension")
+                print("WARNING: You can only extend an enum with the Enum protocol")
             }
             return rawValue as Any
             

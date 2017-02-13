@@ -26,6 +26,7 @@ class EnumStuffTests: XCTestCase {
     }
     
     func testExample() {
+        XCTAssert(test1.allValues.count == 3, "There should be 3 values")
         for value in test1.allValues {
             print("value = \(value)")
         }
