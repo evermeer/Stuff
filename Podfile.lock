@@ -1,0 +1,22 @@
+PODS:
+  - Stuff (0.1.0):
+    - Stuff/All (= 0.1.0)
+  - Stuff/All (0.1.0):
+    - Stuff/Enum
+    - Stuff/Print
+  - Stuff/Enum (0.1.0)
+  - Stuff/Print (0.1.0)
+
+DEPENDENCIES:
+  - Stuff (from `./`)
+
+EXTERNAL SOURCES:
+  Stuff:
+    :path: "./"
+
+SPEC CHECKSUMS:
+  Stuff: 53dffcfd11dafa88c0cf2888d6048fe92dca9e2b
+
+PODFILE CHECKSUM: bf19cca12781c8d2d79fc7cc174325633ebbe909
+
+COCOAPODS: 1.2.0
