@@ -11,7 +11,7 @@ import XCTest
 
 class EnumStuffTests: XCTestCase {
     
-    // You have to extend the enum with the Enum protocol
+    // You have to extend the enum with the Enum protocol (and RawEnum if you want the raw value when it's an Any)
     enum test1: String, Enum, RawEnum {
         case option1
         case option2

@@ -80,8 +80,8 @@ pod "Stuff/Enum"
 
 
 ```swift
-// You have to extend the enum with the Enum protocol
-enum test1: String, Enum {
+// You have to extend the enum with the Enum protocol (and RawEnum if you want the raw value when it's an Any)
+enum test1: String, Enum, RawEnum {
     case option1
     case option2
     case option3
@@ -93,6 +93,7 @@ enum test2: Enum {
     case option6(Int, String)
 }
 
+XCTAssert(test1.allValues.count == 3, "There should be 3 values")
 for value in test1.allValues {
     print("value = \(value)")
 }
@@ -109,6 +110,14 @@ let dict = [String:Any](array)
 print("Array of enums as dictionary:\n \(dict)")
 
 print("query = \(array.queryString))")
+
+let v = getRawValue(test1.option2)
+print("raw value = \(v)")
+
+func getRawValue(_ value: Any) -> Any {
+    return (value as? RawEnum)?.anyRawValue ?? ""
+}
+
 ```
 The output is:
 
