@@ -5,6 +5,8 @@
 //  Copyright © 2017 EVICT BV. All rights reserved.
 //
 
-// Just the root class for extending with generic functionality (See Print)
+/**
+ Just the root class for extending with generic functionality (See Print)
+*/
 open class Stuff {
 }

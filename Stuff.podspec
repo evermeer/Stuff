@@ -17,7 +17,7 @@ EOS
   s.watchos.deployment_target = '2.0'
   s.tvos.deployment_target = '9.0'
 
-  s.source       = { :git => "https://github.com/evermeer/Stuff", :tag => s.version }
+  s.source       = { :git => "https://github.com/evermeer/Stuff.git", :tag => s.version }
   s.default_subspec = "All"
 
 # This is the complete Stuff library

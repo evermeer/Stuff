@@ -7,16 +7,31 @@
 
 import Foundation
 
+/**
+ Extending the Stuff object with print functionality
+ */
 public extension Stuff {
     
+    /**
+     Enumeration of the log levels
+     */
     public enum logLevel: Int {
+        // Informational loging, lowest level
         case info = 1
+        // Debug loging, default level
         case debug = 2
+        // Warning loging, You should take notice
         case warn = 3
+        // Error loging, Something went wrong, take action
         case error = 4
+        // Fatal loging, Something went seriously wrong, can't recover from it.
         case fatal = 5
+        // Set the minimumLogLevel to .none to stop everything from loging
         case none = 6
         
+        /**
+         Get the emoticon for the log level.
+         */
         public func description() -> String {
             switch self {
             case .info:
@@ -35,8 +50,14 @@ public extension Stuff {
         }
     }
     
+    /**
+     Set the minimum log level. By default set to .info which is the minimum. Everything will be loged.
+     */
     public static var minimumLogLevel: logLevel = .info
 
+    /**
+     The print command for writing to the output window
+     */
     public static func print<T>(_ object: T, _ level: logLevel = .debug, filename: String = #file, line: Int = #line, funcname: String = #function) {
         if level.rawValue >= Stuff.minimumLogLevel.rawValue {
             let dateFormatter = DateFormatter()
