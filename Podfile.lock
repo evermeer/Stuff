@@ -1,11 +1,13 @@
 PODS:
-  - Stuff (0.1.0):
-    - Stuff/All (= 0.1.0)
-  - Stuff/All (0.1.0):
+  - Stuff (0.1.1):
+    - Stuff/All (= 0.1.1)
+  - Stuff/All (0.1.1):
     - Stuff/Enum
     - Stuff/Print
-  - Stuff/Enum (0.1.0)
-  - Stuff/Print (0.1.0)
+    - Stuff/TODO
+  - Stuff/Enum (0.1.1)
+  - Stuff/Print (0.1.1)
+  - Stuff/TODO (0.1.1)
 
 DEPENDENCIES:
   - Stuff (from `./`)
@@ -15,7 +17,7 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  Stuff: 53dffcfd11dafa88c0cf2888d6048fe92dca9e2b
+  Stuff: 116cf69ab17d33c32034be8f5fe0800127c82af2
 
 PODFILE CHECKSUM: bf19cca12781c8d2d79fc7cc174325633ebbe909
 

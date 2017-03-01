@@ -10,6 +10,7 @@
 		08E428A7B01137966D47BE47 /* Pods_StuffTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E27E8C40F9CACB5D81F585D5 /* Pods_StuffTests.framework */; };
 		7F29F37C1E4E05070048B915 /* EnumStuffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F29F37B1E4E05070048B915 /* EnumStuffTests.swift */; };
 		7F9A2FC81E51A9C8004450B6 /* PrintStuffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A2FC71E51A9C8004450B6 /* PrintStuffTests.swift */; };
+		7FF3E19E1E65888A0057B575 /* TODOStuffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF3E19D1E65888A0057B575 /* TODOStuffTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		7F29F37D1E4E05070048B915 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F29F3861E4E092C0048B915 /* StuffTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StuffTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F9A2FC71E51A9C8004450B6 /* PrintStuffTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrintStuffTests.swift; sourceTree = "<group>"; };
+		7FF3E19D1E65888A0057B575 /* TODOStuffTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TODOStuffTests.swift; sourceTree = "<group>"; };
 		E27E8C40F9CACB5D81F585D5 /* Pods_StuffTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StuffTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -57,6 +59,7 @@
 			children = (
 				7F29F37B1E4E05070048B915 /* EnumStuffTests.swift */,
 				7F9A2FC71E51A9C8004450B6 /* PrintStuffTests.swift */,
+				7FF3E19D1E65888A0057B575 /* TODOStuffTests.swift */,
 				7F29F37D1E4E05070048B915 /* Info.plist */,
 			);
 			path = StuffTests;
@@ -193,6 +196,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F9A2FC81E51A9C8004450B6 /* PrintStuffTests.swift in Sources */,
+				7FF3E19E1E65888A0057B575 /* TODOStuffTests.swift in Sources */,
 				7F29F37C1E4E05070048B915 /* EnumStuffTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

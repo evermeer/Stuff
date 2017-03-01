@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "Stuff"
-  s.version      = "0.1.1"
+  s.version      = "0.2.0"
   s.summary      = "Too small for a library, too important to just forget"
 
   s.description  = <<-EOS
@@ -24,6 +24,7 @@ EOS
   s.subspec "All" do |ss|
     ss.dependency "Stuff/Enum"
     ss.dependency "Stuff/Print"
+    ss.dependency "Stuff/TODO"
   end
 
 # This is the core Print library
@@ -34,6 +35,11 @@ EOS
 # This is the core Enum library
   s.subspec "Enum" do |ss|
     ss.source_files  = "Source/*.swift", "Source/Enum/*.swift"
+  end
+
+# This is the core Enum library
+  s.subspec "TODO" do |ss|
+    ss.source_files  = "Source/TODO/*.swift"
   end
 
 end

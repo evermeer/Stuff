@@ -11,7 +11,7 @@ import XCTest
 
 class PrintStuffTests: XCTestCase {
     
-    func testExample() {
+    func testPrint() {
         Stuff.print("Just as the standard print but now with detailed information")
         Stuff.print("Now it's a warning", .warn)
         Stuff.print("Or even an error", .error)

@@ -23,6 +23,7 @@ Stuff is a collection of code 'snippets' that are to small to create a library f
 
 - [Print](#print) - For creating a nice output log
 - [Enum](#enum) - Adding functionality to an enum
+- [TODO](#todo) - Adding a TODO helper function
 
 ## Print
 
@@ -134,6 +135,45 @@ query = option4=test,option5=3,option6=(4, "more"))
 raw value = option2
 ```
 
+## TODO
+
+You can install this by adding the following line to your Podfile:
+
+```
+pod "Stuff/TODO"
+```
+
+Whenever you add a function to your project and postpone implementing it, you should add a TODO. 
+Whenever you temporarilly change functioning code in order to debug something, you should add a TODO
+Before commiting/pushing your code, you should evaluate/solve your TODO's
+Usually you just add a TODO comment in your code like this:
+
+```swift
+    //TODO: This needs to be fixed
+```
+
+With the Stuff/TODO helper, you can get compile time and run time support for helping to find your TODO's. Here is an overview of the variants that you can use:
+
+```swift
+    // We need to fix something, but this code can run (compiler warning)
+    TODO()
+
+    // Now output extra info when this code is executed.
+    TODO("An other todo, now giving some detailed info")
+
+    // We need to fix this. Otherwise just fail. The code will crash here. See the stacktrace,
+    TODO_
+```
+
+The code above will put the following in your output. Besides that, you will also see depricated warnings when you have the code open in Xcode.
+
+```
+⚠️ TODO code is still in use! ⚠️
+
+⚠️ TODO code is still in use! ⚠️
+An other todo, now giving some detailed info
+fatal error: TODO left in code: file /Users/evermeer/Desktop/dev/GitHub/Stuff/Source/TODO/TODO.swift, line 15
+```
 
 ## License
 
