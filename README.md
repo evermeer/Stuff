@@ -24,6 +24,7 @@ Stuff is a collection of code 'snippets' that are to small to create a library f
 - [Print](#print) - For creating a nice output log
 - [Enum](#enum) - Adding functionality to an enum
 - [TODO](#todo) - Adding a TODO helper function
+- [Codable](#codable) - Adding Codable helper functions (Swift 4)
 
 ## Print
 
@@ -173,6 +174,59 @@ The code above will put the following in your output. Besides that, you will als
 ⚠️ TODO code is still in use! ⚠️
 An other todo, now giving some detailed info
 fatal error: TODO left in code: file /Users/evermeer/Desktop/dev/GitHub/Stuff/Source/TODO/TODO.swift, line 15
+```
+
+## Codable
+
+You can install this by adding the following line to your Podfile:
+
+⚠️WARNING: Swift 4 or later is required ⚠️
+
+```
+pod "Stuff/Codable"
+```
+
+Swift 4 added the Codable (EnCodable and DeCodable) protocol which you can add to a class or struct. The swift compile will then add coding and decoding functionality to your object. With the JSONEncoder and JSONDecoder classes you can then convert an object from and to json. The Stuff Codable extension will let you do these things in a 1 liner. Here is Apple documentaion about [Codable](https://developer.apple.com/documentation/foundation/archives_and_serialization/encoding_and_decoding_custom_types) The one liners that you can use are:
+
+```swift
+let json = yourEncodableObjectInstance.toJsonString()
+let newObject = YourCodableObject.decode(json: json)
+let objectArray = [YourCodableObject(json: json)
+let newJson = objectArray.toJsonString()
+```
+And here you can see how you can use these Stuff/Codable functions:
+
+```swift
+func test() {
+   let initialObject = TestCodable(naam: "Edwin", id: 1)
+
+   guard let json = initialObject.toJsonString() else {
+      print("Could not create json from object")
+      return
+   }
+   print("Json string of object = \n\t\(json)")
+
+   guard let newObject = TestCodable.decode(json: json) else {
+      print("Could not create object from json")
+      return
+   }
+   print("Object created with json = \n\t\(newObject)")
+   
+   let json2 = "[{\"id\":1,\"naam\":\"Edwin\"},{\"id\":2,\"naam\":\"Vermeer\"}]"
+   guard let array = [TestCodable](json: json2) else {
+      print("Could not create object array from json")
+      return
+   }
+   print("Object array created with json = \(array)")
+   
+   let newJson = array.toJsonString()
+   print("Json from object array = \n\t\(newJson)")
+}
+
+struct TestCodable : Codable {
+   var naam: String?
+   var id: Int?
+}
 ```
 
 ## License

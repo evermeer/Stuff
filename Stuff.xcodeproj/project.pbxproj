@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		08E428A7B01137966D47BE47 /* Pods_StuffTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E27E8C40F9CACB5D81F585D5 /* Pods_StuffTests.framework */; };
+		13E8825E1F03CF3900F1DA7D /* CodableStuffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E8825D1F03CF3900F1DA7D /* CodableStuffTests.swift */; };
 		7F29F37C1E4E05070048B915 /* EnumStuffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F29F37B1E4E05070048B915 /* EnumStuffTests.swift */; };
 		7F9A2FC81E51A9C8004450B6 /* PrintStuffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A2FC71E51A9C8004450B6 /* PrintStuffTests.swift */; };
 		7FF3E19E1E65888A0057B575 /* TODOStuffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF3E19D1E65888A0057B575 /* TODOStuffTests.swift */; };
@@ -15,6 +16,7 @@
 
 /* Begin PBXFileReference section */
 		0BD3780882CCECD3D4223F11 /* Pods-StuffTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StuffTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StuffTests/Pods-StuffTests.debug.xcconfig"; sourceTree = "<group>"; };
+		13E8825D1F03CF3900F1DA7D /* CodableStuffTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableStuffTests.swift; sourceTree = "<group>"; };
 		14C53FB6FF7E4E49FE104565 /* Pods-StuffTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StuffTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-StuffTests/Pods-StuffTests.release.xcconfig"; sourceTree = "<group>"; };
 		7F29F37B1E4E05070048B915 /* EnumStuffTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumStuffTests.swift; sourceTree = "<group>"; };
 		7F29F37D1E4E05070048B915 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 		7F29F37A1E4E05070048B915 /* StuffTests */ = {
 			isa = PBXGroup;
 			children = (
+				13E8825D1F03CF3900F1DA7D /* CodableStuffTests.swift */,
 				7F29F37B1E4E05070048B915 /* EnumStuffTests.swift */,
 				7F9A2FC71E51A9C8004450B6 /* PrintStuffTests.swift */,
 				7FF3E19D1E65888A0057B575 /* TODOStuffTests.swift */,
@@ -185,7 +188,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -198,6 +201,7 @@
 				7F9A2FC81E51A9C8004450B6 /* PrintStuffTests.swift in Sources */,
 				7FF3E19E1E65888A0057B575 /* TODOStuffTests.swift in Sources */,
 				7F29F37C1E4E05070048B915 /* EnumStuffTests.swift in Sources */,
+				13E8825E1F03CF3900F1DA7D /* CodableStuffTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
