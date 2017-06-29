@@ -190,8 +190,11 @@ Swift 4 added the Codable (EnCodable and DeCodable) protocol which you can add t
 
 ```swift
 let json = yourEncodableObjectInstance.toJsonString()
+let data = yourEncodableObjectInstance.toJsonData()
 let newObject = YourCodableObject.decode(json: json)
-let objectArray = [YourCodableObject(json: json)
+let newObject2 = YourCodableObject.decode(data: data)
+let objectArray = [YourCodableObject](json: json)
+let objectArray2 = [YourCodableObject](data: data)
 let newJson = objectArray.toJsonString()
 ```
 And here you can see how you can use these Stuff/Codable functions:

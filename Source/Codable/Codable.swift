@@ -42,16 +42,14 @@ public extension Encodable {
 public extension Decodable {
     
     /**
-     Create an instance of this type from a json string
+     Create an instance of this type from a json data
      
      - parameter json: The json string
      - parameter keyPath: for if you want something else than the root object
      
      - returns: The json string
      */
-    
-    public static func decode(json: String, keyPath: String? = nil) -> Self? {
-        guard var data = json.data(using: String.Encoding.utf8) else { return nil }
+    public static func decode(data: Data, keyPath: String? = nil) -> Self? {
         do {
             if let keyPath = keyPath {
                 let topLevel = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
@@ -64,6 +62,19 @@ public extension Decodable {
             print("🆘 ERROR 🆘 \(error)")
             return nil
         }
+    }
+    
+    /**
+     Create an instance of this type from a json string
+     
+     - parameter json: The json string
+     - parameter keyPath: for if you want something else than the root object
+     
+     - returns: The json string
+     */
+    public static func decode(json: String, keyPath: String? = nil) -> Self? {
+        guard var data = json.data(using: String.Encoding.utf8) else { return nil }
+        return self.decode(data: data, keyPath: keyPath)
     }
     
     /* This seems to be a no-go unless you use enherit from NSObject and use Mirror plus 'setValue forKey'
