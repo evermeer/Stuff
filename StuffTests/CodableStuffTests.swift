@@ -21,7 +21,7 @@ class CodingStuffTests: XCTestCase {
         }
         print("Json string of object = \n\t\(json)")
         
-        guard let newObject = TestCodable.decode(json: json) else {
+        guard let newObject = TestCodable.decodeTest(json: json) else {
             print("Could not create object from json")
             return
         }

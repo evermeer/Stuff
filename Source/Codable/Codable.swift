@@ -33,7 +33,8 @@ public extension Encodable {
      - parameter dataEncodingStrategy: what kind of encoding. base64 is the default
      
      - returns: The json string
-     */    public func toJsonString(outputFormatting: JSONEncoder.OutputFormatting = .compact, dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate, dataEncodingStrategy: JSONEncoder.DataEncodingStrategy = .base64Encode) -> String? {
+     */
+    public func toJsonString(outputFormatting: JSONEncoder.OutputFormatting = .compact, dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate, dataEncodingStrategy: JSONEncoder.DataEncodingStrategy = .base64Encode) -> String? {
         let data = self.toJsonData(outputFormatting: outputFormatting, dateEncodingStrategy: dateEncodingStrategy, dataEncodingStrategy: dataEncodingStrategy)
         return data == nil ? nil : String(data: data!, encoding: .utf8)
     }
@@ -55,7 +56,7 @@ public extension Decodable {
                 let topLevel = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
                 guard let nestedJson = (topLevel as AnyObject).value(forKeyPath: keyPath) else { return nil }
                 let nestedData = try JSONSerialization.data(withJSONObject: nestedJson)
-                data = nestedData
+                return try JSONDecoder().decode(Self.self, from: nestedData)
             }
             return try JSONDecoder().decode(Self.self, from: data)
         } catch {
@@ -73,18 +74,28 @@ public extension Decodable {
      - returns: The json string
      */
     public static func decode(json: String, keyPath: String? = nil) -> Self? {
-        guard var data = json.data(using: String.Encoding.utf8) else { return nil }
+        guard let data = json.data(using: String.Encoding.utf8) else { return nil }
         return self.decode(data: data, keyPath: keyPath)
     }
     
-    /* This seems to be a no-go unless you use enherit from NSObject and use Mirror plus 'setValue forKey'
-    init?(json: String, keyPath: String? = nil) {
-        guard let obj = Self.init(json) else { return nil }
-        self = obj // Won't work...
+    // This workaround works, why can't I do this in an init? (see below)
+    private static func decodeTest(json: String) -> Self? {
+        guard let decoder: Decoder = GetDecoder.decode(json: json)?.decoder else { return nil }
+        return try! self.init(from: decoder) // Who what should we do to get it so that we can call this?
     }
- */
+    /* This seems to be a no-go. what super.init can we call?
+    public init?(json: String) throws {
+        guard let decoder: Decoder = GetDecoder.decode(json: json)?.decoder else { return }
+        try self.init(from: decoder) // Who what should we do to get it so that we can call this?
+    }*/
 }
 
+class GetDecoder : Decodable {
+    var decoder: Decoder?
+    required init(from: Decoder){
+        self.decoder = from
+    }
+}
 
 public extension Array where Element: Decodable {
     
@@ -127,7 +138,7 @@ public extension Array where Element: Decodable {
     }
     
     /**
-     Get the type of the object where this array is for
+     Get the type of the object where this array is for (Workaround trick because Self.self does not work)
      
      - returns: The object type
      */
