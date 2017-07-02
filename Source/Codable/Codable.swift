@@ -38,6 +38,38 @@ public extension Encodable {
         let data = self.toJsonData(outputFormatting: outputFormatting, dateEncodingStrategy: dateEncodingStrategy, dataEncodingStrategy: dataEncodingStrategy)
         return data == nil ? nil : String(data: data!, encoding: .utf8)
     }
+    
+    /**
+     Save this object to a file in the temp directory
+     
+     - parameter fileName: The filename
+     
+     - returns: Nothing
+     */
+    public func saveToTemp(_ fileName: String) throws {
+        guard let data = self.toJsonData() else { throw CodingError.RuntimeError("cannot create data from object")}
+        let fileURL = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileName)
+        try data.write(to: fileURL, options: .atomic)
+    }
+    
+    
+    
+    #if os(tvOS)
+    // Save to documents folder is not supported on tvOS
+    #else
+    /**
+     Save this object to a file in the documents directory
+     
+     - parameter fileName: The filename
+     
+     - returns: true if successfull
+     */
+    public func saveToDocuments(_ fileName: String) throws {
+        guard let data = self.toJsonData() else { throw CodingError.RuntimeError("cannot create data from object")}
+        let fileURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileName)
+        try data.write(to: fileURL, options: .atomic)
+    }
+    #endif
 }
 
 public extension Decodable {
@@ -70,54 +102,31 @@ public extension Decodable {
         let value = try JSONDecoder().decode(Self.self, from: data)
         self = value
     }
+    
+    /**
+     Initialize this object from an archived file from the temp directory
+     
+     - parameter fileNameInTemp: The filename
+     */
+    public init(fileNameInTemp: String) throws {
+        let fileURL = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileNameInTemp)
+        let data = try Data(contentsOf: fileURL)
+        try self.init(data: data)
+    }
+    
+    /**
+     Initialize this object from an archived file from the documents directory
+     
+     - parameter fileNameInDocuments: The filename
+     */
+    public init(fileNameInDocuments: String) throws {
+        let fileURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileNameInDocuments)
+        let data = try Data(contentsOf: fileURL)
+        try self.init(data: data)
+    }
 }
 enum CodingError : Error {
     case RuntimeError(String)
-}
-
-public extension Array where Element: Decodable {
-    
-    /**
-     Initialize an array based on a json string
-     
-     - parameter json: The json string
-     - parameter conversionOptions: Option set for the various conversion options.
-     */
-    public init(jsonArray: String?) throws {
-        guard let data = jsonArray?.data(using: String.Encoding.utf8) else { throw CodingError.RuntimeError("Cannot decode json string to data.") }
-        try self.init(dataArray: data)
-    }
-    
-    
-    /**
-     Initialize an array based on a json string
-     
-     - parameter json: The json string
-     - parameter conversionOptions: Option set for the various conversion options.
-     */
-    public init(dataArray: Data?, keyPath: String? = nil) throws {
-        self.init()        
-        guard var data = dataArray else { throw CodingError.RuntimeError("Cannot decode json to data") }
-        if let keyPath = keyPath {
-            let topLevel = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
-            guard let nestedJson = (topLevel as AnyObject).value(forKeyPath: keyPath) else { throw CodingError.RuntimeError("Cannot get nested data for keyPath") }
-            let nestedData = try JSONSerialization.data(withJSONObject: nestedJson)
-            data = nestedData
-        }
-        let newArray = try JSONDecoder().decode(self.getType(self), from: data)
-        for item in newArray {
-            self.append(item)
-        }
-    }
-    
-    /**
-     Get the type of the object where this array is for (Workaround trick because Self.self does not work)
-     
-     - returns: The object type
-     */
-    public func getType<T: Decodable>(_: T) -> T.Type {
-        return T.self
-    }
 }
 
 public extension Array where Element: Encodable {
@@ -134,4 +143,5 @@ public extension Array where Element: Encodable {
         let p = outputFormatting == .compact ? "" : "/n"
         return "[\(p)" + self.map({($0).toJsonString(outputFormatting: outputFormatting, dateEncodingStrategy: dateEncodingStrategy, dataEncodingStrategy: dataEncodingStrategy) ?? ""}).joined(separator: ",\(p)") + "\(p)]"
     }
+    
 }

@@ -193,11 +193,16 @@ let json = yourEncodableObjectInstance.toJsonString()
 let data = yourEncodableObjectInstance.toJsonData()
 let newObject = try? YourCodableObject(json: json)
 let newObject2 = try? YourCodableObject(data: data)
-let objectArray = try? [YourCodableObject](jsonArray: json)
-let objectArray2 = try? [YourCodableObject](dataArray: data)
+let objectArray = try? [YourCodableObject](json: json)
+let objectArray2 = try? [YourCodableObject](data: data)
 let newJson = objectArray.toJsonString()
 let innerObject = try? TestCodable(json: "{\"user\":{\"id\":1,\"naam\":\"Edwin\"}}", keyPath: "user")
+try initialObject.saveToDocuments("myFile.dat")
+let readObject = try? TestCodable(fileNameInDocuments: "myFile.dat")
+try objectArray.saveToDocuments("myFile2.dat")
+let objectArray3 = try? [TestCodable](fileNameInDocuments: "myFile2.dat")
 ```
+
 And here you can see how you can use these Stuff/Codable functions:
 
 ```swift
