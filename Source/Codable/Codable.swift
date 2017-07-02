@@ -41,60 +41,38 @@ public extension Encodable {
 }
 
 public extension Decodable {
-    
-    /**
-     Create an instance of this type from a json data
-     
-     - parameter json: The json string
-     - parameter keyPath: for if you want something else than the root object
-     
-     - returns: The json string
-     */
-    public static func decode(data: Data, keyPath: String? = nil) -> Self? {
-        do {
-            if let keyPath = keyPath {
-                let topLevel = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
-                guard let nestedJson = (topLevel as AnyObject).value(forKeyPath: keyPath) else { return nil }
-                let nestedData = try JSONSerialization.data(withJSONObject: nestedJson)
-                return try JSONDecoder().decode(Self.self, from: nestedData)
-            }
-            return try JSONDecoder().decode(Self.self, from: data)
-        } catch {
-            print("🆘 ERROR 🆘 \(error)")
-            return nil
-        }
-    }
-    
     /**
      Create an instance of this type from a json string
      
      - parameter json: The json string
      - parameter keyPath: for if you want something else than the root object
-     
-     - returns: The json string
      */
-    public static func decode(json: String, keyPath: String? = nil) -> Self? {
-        guard let data = json.data(using: String.Encoding.utf8) else { return nil }
-        return self.decode(data: data, keyPath: keyPath)
+    init(json: String, keyPath: String? = nil) throws {
+        guard let data = json.data(using: .utf8) else { throw CodingError.RuntimeError("cannot create data from string") }
+        try self.init(data: data, keyPath: keyPath)
     }
     
-    // This workaround works, why can't I do this in an init? (see below)
-    private static func decodeTest(json: String) -> Self? {
-        guard let decoder: Decoder = GetDecoder.decode(json: json)?.decoder else { return nil }
-        return try! self.init(from: decoder) // Who what should we do to get it so that we can call this?
+    /**
+     Create an instance of this type from a json string
+     
+     - parameter data: The json data
+     - parameter keyPath: for if you want something else than the root object
+     */
+    init(data: Data, keyPath: String? = nil) throws {
+        if let keyPath = keyPath {
+            let topLevel = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
+            guard let nestedJson = (topLevel as AnyObject).value(forKeyPath: keyPath) else { throw CodingError.RuntimeError("Cannot decode data to object")  }
+            let nestedData = try JSONSerialization.data(withJSONObject: nestedJson)
+            let value = try JSONDecoder().decode(Self.self, from: nestedData)
+            self = value
+            return
+        }
+        let value = try JSONDecoder().decode(Self.self, from: data)
+        self = value
     }
-    /* This seems to be a no-go. what super.init can we call?
-    public init?(json: String) throws {
-        guard let decoder: Decoder = GetDecoder.decode(json: json)?.decoder else { return }
-        try self.init(from: decoder) // Who what should we do to get it so that we can call this?
-    }*/
 }
-
-class GetDecoder : Decodable {
-    var decoder: Decoder?
-    required init(from: Decoder){
-        self.decoder = from
-    }
+enum CodingError : Error {
+    case RuntimeError(String)
 }
 
 public extension Array where Element: Decodable {
@@ -105,9 +83,9 @@ public extension Array where Element: Decodable {
      - parameter json: The json string
      - parameter conversionOptions: Option set for the various conversion options.
      */
-    public init?(json: String?) {
-        guard let data = json?.data(using: String.Encoding.utf8) else { return nil }
-        self.init(data: data)
+    public init(jsonArray: String?) throws {
+        guard let data = jsonArray?.data(using: String.Encoding.utf8) else { throw CodingError.RuntimeError("Cannot decode json string to data.") }
+        try self.init(dataArray: data)
     }
     
     
@@ -117,23 +95,18 @@ public extension Array where Element: Decodable {
      - parameter json: The json string
      - parameter conversionOptions: Option set for the various conversion options.
      */
-    public init?(data: Data?, keyPath: String? = nil) {
+    public init(dataArray: Data?, keyPath: String? = nil) throws {
         self.init()        
-        do {
-            guard var data = data else { return nil }
-            if let keyPath = keyPath {
-                let topLevel = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
-                guard let nestedJson = (topLevel as AnyObject).value(forKeyPath: keyPath) else { return nil }
-                let nestedData = try JSONSerialization.data(withJSONObject: nestedJson)
-                data = nestedData
-            }
-            let newArray = try JSONDecoder().decode(self.getType(self), from: data)
-            for item in newArray {
-                self.append(item)
-            }
-        } catch {
-            print("🆘 ERROR 🆘 \(error)")
-            return nil
+        guard var data = dataArray else { throw CodingError.RuntimeError("Cannot decode json to data") }
+        if let keyPath = keyPath {
+            let topLevel = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
+            guard let nestedJson = (topLevel as AnyObject).value(forKeyPath: keyPath) else { throw CodingError.RuntimeError("Cannot get nested data for keyPath") }
+            let nestedData = try JSONSerialization.data(withJSONObject: nestedJson)
+            data = nestedData
+        }
+        let newArray = try JSONDecoder().decode(self.getType(self), from: data)
+        for item in newArray {
+            self.append(item)
         }
     }
     

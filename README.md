@@ -191,11 +191,12 @@ Swift 4 added the Codable (EnCodable and DeCodable) protocol which you can add t
 ```swift
 let json = yourEncodableObjectInstance.toJsonString()
 let data = yourEncodableObjectInstance.toJsonData()
-let newObject = YourCodableObject.decode(json: json)
-let newObject2 = YourCodableObject.decode(data: data)
-let objectArray = [YourCodableObject](json: json)
-let objectArray2 = [YourCodableObject](data: data)
+let newObject = try? YourCodableObject(json: json)
+let newObject2 = try? YourCodableObject(data: data)
+let objectArray = try? [YourCodableObject](jsonArray: json)
+let objectArray2 = try? [YourCodableObject](dataArray: data)
 let newJson = objectArray.toJsonString()
+let innerObject = try? TestCodable(json: "{\"user\":{\"id\":1,\"naam\":\"Edwin\"}}", keyPath: "user")
 ```
 And here you can see how you can use these Stuff/Codable functions:
 
@@ -209,14 +210,14 @@ func test() {
    }
    print("Json string of object = \n\t\(json)")
 
-   guard let newObject = TestCodable.decode(json: json) else {
+   guard let newObject = try? TestCodable(json: json) else {
       print("Could not create object from json")
       return
    }
    print("Object created with json = \n\t\(newObject)")
    
    let json2 = "[{\"id\":1,\"naam\":\"Edwin\"},{\"id\":2,\"naam\":\"Vermeer\"}]"
-   guard let array = [TestCodable](json: json2) else {
+   guard let array = try? [TestCodable](jsonArray: json2) else {
       print("Could not create object array from json")
       return
    }
@@ -224,6 +225,12 @@ func test() {
    
    let newJson = array.toJsonString()
    print("Json from object array = \n\t\(newJson)")
+   
+   guard let innerObject = try? TestCodable(json: "{\"user\":{\"id\":1,\"naam\":\"Edwin\"}}", keyPath: "user") else {
+      print("Could not create object from json")
+      return
+   }
+   print("inner object from json \(String(describing: innerObject))")
 }
 
 struct TestCodable : Codable {

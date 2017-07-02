@@ -17,25 +17,35 @@ class CodingStuffTests: XCTestCase {
         
         guard let json = initialObject.toJsonString() else {
             print("Could not create json from object")
+            assertionFailure()
             return
         }
         print("Json string of object = \n\t\(json)")
         
-        guard let newObject = TestCodable.decodeTest(json: json) else {
+        guard let newObject = try? TestCodable(json: json) else {
             print("Could not create object from json")
+            assertionFailure()
             return
         }
-        print("Object created with json = \n\t\(newObject)")
+        print("Object created with json = \n\t\(String(describing: newObject))")
         
         let json2 = "[{\"id\":1,\"naam\":\"Edwin\"},{\"id\":2,\"naam\":\"Vermeer\"}]"
-        guard let array = [TestCodable](json: json2) else {
+        guard let array = try? [TestCodable](jsonArray: json2) else {
             print("Could not create object array from json")
+            assertionFailure()
             return
         }
-        print("Object array created with json = \(array)")
+        print("Object array created with json = \(String(describing: array))")
         
-        let newJson = array.toJsonString()
+        let newJson = array.toJsonString() ?? ""
         print("Json from object array = \n\t\(newJson)")
+        
+        guard let innerObject = try? TestCodable(json: "{\"user\":{\"id\":1,\"naam\":\"Edwin\"}}", keyPath: "user") else {
+            print("Could not create object from json")
+            assertionFailure()
+            return
+        }
+        print("inner object from json \(String(describing: innerObject))")
     }
 }
 
