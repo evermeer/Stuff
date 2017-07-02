@@ -6,6 +6,9 @@
 //  Copyright © 2017 EVICT BV. All rights reserved.
 //
 
+enum CodingError : Error {
+    case RuntimeError(String)
+}
 
 public extension Encodable {
     /**
@@ -39,6 +42,20 @@ public extension Encodable {
         return data == nil ? nil : String(data: data!, encoding: .utf8)
     }
     
+    
+    /**
+     Save this object to a file in the temp directory
+     
+     - parameter fileName: The filename
+     
+     - returns: Nothing
+     */
+    public func saveTo(_ fileURL: URL) throws {
+        guard let data = self.toJsonData() else { throw CodingError.RuntimeError("cannot create data from object")}
+        try data.write(to: fileURL, options: .atomic)
+    }
+    
+    
     /**
      Save this object to a file in the temp directory
      
@@ -47,9 +64,8 @@ public extension Encodable {
      - returns: Nothing
      */
     public func saveToTemp(_ fileName: String) throws {
-        guard let data = self.toJsonData() else { throw CodingError.RuntimeError("cannot create data from object")}
         let fileURL = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileName)
-        try data.write(to: fileURL, options: .atomic)
+        try self.saveTo(fileURL)
     }
     
     
@@ -65,9 +81,8 @@ public extension Encodable {
      - returns: true if successfull
      */
     public func saveToDocuments(_ fileName: String) throws {
-        guard let data = self.toJsonData() else { throw CodingError.RuntimeError("cannot create data from object")}
         let fileURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileName)
-        try data.write(to: fileURL, options: .atomic)
+        try self.saveTo(fileURL)
     }
     #endif
 }
@@ -104,14 +119,23 @@ public extension Decodable {
     }
     
     /**
+     Initialize this object from an archived file from an URL
+     
+     - parameter fileNameInTemp: The filename
+     */
+    public init(fileURL: URL) throws {
+        let data = try Data(contentsOf: fileURL)
+        try self.init(data: data)
+    }
+    
+    /**
      Initialize this object from an archived file from the temp directory
      
      - parameter fileNameInTemp: The filename
      */
     public init(fileNameInTemp: String) throws {
         let fileURL = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileNameInTemp)
-        let data = try Data(contentsOf: fileURL)
-        try self.init(data: data)
+        try self.init(fileURL: fileURL)
     }
     
     /**
@@ -121,27 +145,8 @@ public extension Decodable {
      */
     public init(fileNameInDocuments: String) throws {
         let fileURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileNameInDocuments)
-        let data = try Data(contentsOf: fileURL)
-        try self.init(data: data)
+        try self.init(fileURL: fileURL)
     }
-}
-enum CodingError : Error {
-    case RuntimeError(String)
 }
 
-public extension Array where Element: Encodable {
-    /**
-     Convert this array to a json string
-     
-     - parameter outputFormatting: The formatting of the output JSON data (compact or pritty printed)
-     - parameter dateEncodinStrategy: how do you want to format the date
-     - parameter dataEncodingStrategy: what kind of encoding. base64 is the default
-     
-     - returns: The json string
-     */
-    public func toJsonString(outputFormatting: JSONEncoder.OutputFormatting = .compact, dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate, dataEncodingStrategy: JSONEncoder.DataEncodingStrategy = .base64Encode) -> String {
-        let p = outputFormatting == .compact ? "" : "/n"
-        return "[\(p)" + self.map({($0).toJsonString(outputFormatting: outputFormatting, dateEncodingStrategy: dateEncodingStrategy, dataEncodingStrategy: dataEncodingStrategy) ?? ""}).joined(separator: ",\(p)") + "\(p)]"
-    }
-    
-}
+ 
