@@ -176,6 +176,15 @@ An other todo, now giving some detailed info
 fatal error: TODO left in code: file /Users/evermeer/Desktop/dev/GitHub/Stuff/Source/TODO/TODO.swift, line 15
 ```
 
+But... It might be nicer to just add the following build phase script which will also give you compile time warnings:
+
+```
+KEYWORDS="TODO|FIXME|\?\?\?:|\!\!\!:"
+find "${SRCROOT}" \( -name "*.swift" \) -print0 | \
+xargs -0 egrep --with-filename --line-number --only-matching "($KEYWORDS).*\$" | \
+perl -p -e "s/($KEYWORDS)/ warning: \$1/"
+```
+
 ## Codable
 
 You can install this by adding the following line to your Podfile:

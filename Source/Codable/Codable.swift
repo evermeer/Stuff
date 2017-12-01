@@ -20,7 +20,7 @@ public extension Encodable {
      
      - returns: The json data
      */
-    public func toJsonData(outputFormatting: JSONEncoder.OutputFormatting = .compact, dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate, dataEncodingStrategy: JSONEncoder.DataEncodingStrategy = .base64Encode) -> Data? {
+    public func toJsonData(outputFormatting: JSONEncoder.OutputFormatting = [], dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate, dataEncodingStrategy: JSONEncoder.DataEncodingStrategy = .base64) -> Data? {
         let encoder = JSONEncoder()
         encoder.outputFormatting = outputFormatting
         encoder.dateEncodingStrategy = dateEncodingStrategy
@@ -37,7 +37,7 @@ public extension Encodable {
      
      - returns: The json string
      */
-    public func toJsonString(outputFormatting: JSONEncoder.OutputFormatting = .compact, dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate, dataEncodingStrategy: JSONEncoder.DataEncodingStrategy = .base64Encode) -> String? {
+    public func toJsonString(outputFormatting: JSONEncoder.OutputFormatting = [], dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate, dataEncodingStrategy: JSONEncoder.DataEncodingStrategy = .base64) -> String? {
         let data = self.toJsonData(outputFormatting: outputFormatting, dateEncodingStrategy: dateEncodingStrategy, dataEncodingStrategy: dataEncodingStrategy)
         return data == nil ? nil : String(data: data!, encoding: .utf8)
     }
@@ -110,12 +110,10 @@ public extension Decodable {
             let topLevel = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
             guard let nestedJson = (topLevel as AnyObject).value(forKeyPath: keyPath) else { throw CodingError.RuntimeError("Cannot decode data to object")  }
             let nestedData = try JSONSerialization.data(withJSONObject: nestedJson)
-            let value = try JSONDecoder().decode(Self.self, from: nestedData)
-            self = value
+            self = try JSONDecoder().decode(Self.self, from: nestedData)
             return
         }
-        let value = try JSONDecoder().decode(Self.self, from: data)
-        self = value
+        self = try JSONDecoder().decode(Self.self, from: data)
     }
     
     /**
