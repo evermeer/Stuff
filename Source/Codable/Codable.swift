@@ -105,15 +105,17 @@ public extension Decodable {
      - parameter data: The json data
      - parameter keyPath: for if you want something else than the root object
      */
-    init(data: Data, keyPath: String? = nil) throws {
+    init(data: Data, keyPath: String? = nil, codingStragegy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase) throws {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         if let keyPath = keyPath {
             let topLevel = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
             guard let nestedJson = (topLevel as AnyObject).value(forKeyPath: keyPath) else { throw CodingError.RuntimeError("Cannot decode data to object")  }
             let nestedData = try JSONSerialization.data(withJSONObject: nestedJson)
-            self = try JSONDecoder().decode(Self.self, from: nestedData)
+            self = try decoder.decode(Self.self, from: nestedData)
             return
         }
-        self = try JSONDecoder().decode(Self.self, from: data)
+        self = try decoder.decode(Self.self, from: data)
     }
     
     /**
