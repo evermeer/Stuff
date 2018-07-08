@@ -19,7 +19,7 @@
 
 # General information
 
-Stuff is a collection of code 'snippets' that are to small to create a library for and which do not fit in an other library. Run the unit tests to see the code in action.
+Stuff is a collection of code 'snippets' that are too small to create a library for and which do not fit in an other library. Run the unit tests to see the code in action.
 
 - [Print](#print) - For creating a nice output log
 - [Enum](#enum) - Adding functionality to an enum
