@@ -13,7 +13,7 @@ import XCTest
 class CodingStuffTests: XCTestCase {
     
     func test() {
-        let initialObject = TestCodable(naam: "Edwin", id: 1)
+        let initialObject = TestCodable(naam: "Edwin", id: 1, testField: "tst")
         
         guard let json = initialObject.toJsonString() else {
             print("Could not create json from object")
@@ -46,7 +46,16 @@ class CodingStuffTests: XCTestCase {
             return
         }
         print("inner object from json \(String(describing: innerObject))")
-        
+
+        do {
+            let custom = try TestCodable(json: "{\"Naam\":\"UN\", \"Id\":5, \"Test_field\":\"tst\"}", keyPath: nil, codingStrategy: customCodingStragegy)
+            print("read object with custom key coding from json to \(String(describing: custom))")
+        } catch {
+            print("Could not custom case convert \(error)")
+            assertionFailure()
+            return
+        }
+
         do {
             try initialObject.saveToDocuments("myFile.dat")
         } catch {
@@ -80,4 +89,5 @@ class CodingStuffTests: XCTestCase {
 struct TestCodable : Codable {
     var naam: String?
     var id: Int?
+    var testField: String?
 }

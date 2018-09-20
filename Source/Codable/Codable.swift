@@ -10,6 +10,28 @@ enum CodingError : Error {
     case RuntimeError(String)
 }
 
+struct AnyKey: CodingKey {
+    var stringValue: String
+    var intValue: Int?
+
+    init(stringValue: String) {
+        self.stringValue = stringValue
+        self.intValue = nil
+    }
+
+    init(intValue: Int) {
+        self.stringValue = String(intValue)
+        self.intValue = intValue
+    }
+}
+
+public var customCodingStragegy: JSONDecoder.KeyDecodingStrategy = .custom { keys in
+    let lastComponent = keys.last!.stringValue
+    let snakeCased = lastComponent.split(separator: "_").map { $0.prefix(1).uppercased() + $0.dropFirst() }.reduce("") { $0 + $1}
+    let lowerFirst = snakeCased.prefix(1).lowercased() + snakeCased.dropFirst()
+    return AnyKey(stringValue: lowerFirst)
+}
+
 public extension Encodable {
     /**
      Convert this object to json data
@@ -94,9 +116,9 @@ public extension Decodable {
      - parameter json: The json string
      - parameter keyPath: for if you want something else than the root object
      */
-    init(json: String, keyPath: String? = nil) throws {
+    init(json: String, keyPath: String? = nil, codingStrategy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase) throws {
         guard let data = json.data(using: .utf8) else { throw CodingError.RuntimeError("cannot create data from string") }
-        try self.init(data: data, keyPath: keyPath)
+        try self.init(data: data, keyPath: keyPath, codingStrategy: codingStrategy)
     }
     
     /**
@@ -105,9 +127,9 @@ public extension Decodable {
      - parameter data: The json data
      - parameter keyPath: for if you want something else than the root object
      */
-    init(data: Data, keyPath: String? = nil, codingStragegy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase) throws {
+    init(data: Data, keyPath: String? = nil, codingStrategy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase) throws {
         let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.keyDecodingStrategy = codingStrategy
         if let keyPath = keyPath {
             let topLevel = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
             guard let nestedJson = (topLevel as AnyObject).value(forKeyPath: keyPath) else { throw CodingError.RuntimeError("Cannot decode data to object")  }

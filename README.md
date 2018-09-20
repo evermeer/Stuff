@@ -189,8 +189,6 @@ perl -p -e "s/($KEYWORDS)/ warning: \$1/"
 
 You can install this by adding the following line to your Podfile:
 
-⚠️WARNING: Swift 4 or later is required ⚠️
-
 ```
 pod "Stuff/Codable"
 ```
@@ -216,7 +214,7 @@ And here you can see how you can use these Stuff/Codable functions:
 
 ```swift
 func test() {
-   let initialObject = TestCodable(naam: "Edwin", id: 1)
+   let initialObject = TestCodable(naam: "Edwin", id: 1, testField: "tst")
 
    guard let json = initialObject.toJsonString() else {
       print("Could not create json from object")
@@ -245,11 +243,18 @@ func test() {
       return
    }
    print("inner object from json \(String(describing: innerObject))")
+   
+   guard let custom = try TestCodable(json: "{\"Naam\":\"UpperN\", \"Id\":5, \"Test_field\":\"lowerSnake\"}", keyPath: nil, codingStrategy: customCodingStragegy) else {
+      print("Could not custom case convert")
+      return
+   }
+   print("read object with custom key coding from json to \(String(describing:    
 }
 
 struct TestCodable : Codable {
    var naam: String?
    var id: Int?
+    var testField: String?    
 }
 ```
 
