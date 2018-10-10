@@ -258,6 +258,15 @@ struct TestCodable : Codable {
 }
 ```
 
+besides the keyPath a shown in the sample code above you could also add one or more of the folowing parameters which are part of the standard JSONDecoder. If these parameters are not supplied, then the default value (see what's after the =) will be used.
+
+```
+keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase,
+dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
+dataDecodingStrategy: JSONDecoder.DataDecodingStrategy = .base64,
+nonConformingFloatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw
+```
+
 ## License
 
 Stuff is available under the MIT 3 license. See the LICENSE file for more info.

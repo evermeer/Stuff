@@ -116,9 +116,13 @@ public extension Decodable {
      - parameter json: The json string
      - parameter keyPath: for if you want something else than the root object
      */
-    init(json: String, keyPath: String? = nil, codingStrategy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase) throws {
+    init(json: String, keyPath: String? = nil,
+         keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase,
+         dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
+         dataDecodingStrategy: JSONDecoder.DataDecodingStrategy = .base64,
+         nonConformingFloatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw) throws {
         guard let data = json.data(using: .utf8) else { throw CodingError.RuntimeError("cannot create data from string") }
-        try self.init(data: data, keyPath: keyPath, codingStrategy: codingStrategy)
+        try self.init(data: data, keyPath: keyPath, keyDecodingStrategy: keyDecodingStrategy, dateDecodingStrategy: dateDecodingStrategy, dataDecodingStrategy: dataDecodingStrategy, nonConformingFloatDecodingStrategy: nonConformingFloatDecodingStrategy)
     }
     
     /**
@@ -127,9 +131,18 @@ public extension Decodable {
      - parameter data: The json data
      - parameter keyPath: for if you want something else than the root object
      */
-    init(data: Data, keyPath: String? = nil, codingStrategy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase) throws {
+    init(data: Data, keyPath: String? = nil,
+         keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase,
+         dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
+         dataDecodingStrategy: JSONDecoder.DataDecodingStrategy = .base64,
+         nonConformingFloatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw) throws {
+
         let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = codingStrategy
+        decoder.keyDecodingStrategy = keyDecodingStrategy
+        decoder.dateDecodingStrategy = dateDecodingStrategy
+        decoder.dataDecodingStrategy = dataDecodingStrategy
+        decoder.nonConformingFloatDecodingStrategy = nonConformingFloatDecodingStrategy
+
         if let keyPath = keyPath {
             let topLevel = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
             guard let nestedJson = (topLevel as AnyObject).value(forKeyPath: keyPath) else { throw CodingError.RuntimeError("Cannot decode data to object")  }

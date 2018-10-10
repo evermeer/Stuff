@@ -48,7 +48,7 @@ class CodingStuffTests: XCTestCase {
         print("inner object from json \(String(describing: innerObject))")
 
         do {
-            let custom = try TestCodable(json: "{\"Naam\":\"UN\", \"Id\":5, \"Test_field\":\"tst\"}", keyPath: nil, codingStrategy: customCodingStragegy)
+            let custom = try TestCodable(json: "{\"Naam\":\"UN\", \"Id\":5, \"Test_field\":\"tst\"}", keyPath: nil, keyDecodingStrategy: customCodingStragegy)
             print("read object with custom key coding from json to \(String(describing: custom))")
         } catch {
             print("Could not custom case convert \(error)")
@@ -59,7 +59,7 @@ class CodingStuffTests: XCTestCase {
         do {
             try initialObject.saveToDocuments("myFile.dat")
         } catch {
-            print("Could not write to documents data")
+            print("Could not write to documents data : \(error)")
             assertionFailure()
             return
         }
