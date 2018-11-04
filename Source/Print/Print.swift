@@ -58,14 +58,16 @@ public extension Stuff {
     /**
      The print command for writing to the output window
      */
-    public static func print<T>(_ object: T, _ level: logLevel = .debug, filename: String = #file, line: Int = #line, funcname: String = #function) {
+    public static func print<T>(_ object: T, _ level: logLevel = (T.self is Error.Type ? .error : .debug), filename: String = #file, line: Int = #line, funcname: String = #function, trace: [String] = Thread.callStackSymbols)  {
         if level.rawValue >= Stuff.minimumLogLevel.rawValue {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MM/dd/yyyy HH:mm:ss:SSS"
             let process = ProcessInfo.processInfo
-            let threadId = "?"
+            let threadId = Thread.current.name ?? ""
             let file = URL(string: filename)?.lastPathComponent ?? ""
-            Swift.print("\n\(level.description()) .\(level) ⏱ \(dateFormatter.string(from: Foundation.Date())) 📱 \(process.processName) [\(process.processIdentifier):\(threadId)] 📂 \(file)(\(line)) ⚙️ \(funcname) ➡️\r\t\(object)")
+            let traceOutput: String = trace.map { "\t\t\($0)" }.reduce("\n") { "\($0)\n\($1)" }
+            let output: String =  object is Error ? "\((object as! Error).localizedDescription)\(traceOutput)" : "\(object)"
+            Swift.print("\n\(level.description()) .\(level) ⏱ \(dateFormatter.string(from: Foundation.Date())) 📱 \(process.processName) [\(process.processIdentifier):\(threadId)] 📂 \(file)(\(line)) ⚙️ \(funcname) ➡️\r\t\(output)")
         }
     }
 }

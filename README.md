@@ -67,6 +67,13 @@ The output of the code above is:
     Only errors are shown
 ```
 
+There is also a shortcut print statement for an error object. This will print the localizedDescription and set the warning level to .error. 
+```swift
+    Stuff.print(error)
+```
+
+Update: From now on printing .error will also give you a stacktrace.
+
 ## Enum
 
 You can install this by adding the following line to your Podfile:
