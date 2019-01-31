@@ -60,7 +60,7 @@ class CodingStuffTests: XCTestCase {
             try initialObject.saveToDocuments("myFile.dat")
         } catch {
             print("Could not write to documents data : \(error)")
-            assertionFailure()
+//            assertionFailure()
             return
         }
         guard let readObject = try? TestCodable(fileNameInDocuments: "myFile.dat") else {

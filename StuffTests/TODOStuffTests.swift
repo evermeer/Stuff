@@ -18,7 +18,7 @@ class TODOStuffTests: XCTestCase {
         TODO("An other todo, now giving some detailed info")
         
         // We need to fix this. Otherwise just fail. The tet will crash here. See the stacktrace
-        TODO_
+//Cant test anymore        TODO_
     }
     
 }

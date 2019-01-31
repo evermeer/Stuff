@@ -37,7 +37,8 @@ class EnumStuffTests: XCTestCase {
         print("v2 = \(v2.associated.label), \(v2.associated.value!)")
         let v3: test2 = .option6(4, "more")
         print("v3 = \(v3.associated.label), \(v3.associated.value!)")
-        
+        print("v3 = \(v3.associated.label), \(v3.associated.values)")
+
         let array = [v1, v2, v3]
         let dict = [String:Any](array)
         print("Array of enums as dictionary:\n \(dict)")

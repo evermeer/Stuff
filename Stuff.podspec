@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "Stuff"
-  s.version      = "0.9.0"
+  s.version      = "1.0.0"
   s.summary      = "Too small for a library, too important to just forget"
 
   s.description  = <<-EOS

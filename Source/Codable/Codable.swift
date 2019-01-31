@@ -42,7 +42,7 @@ public extension Encodable {
      
      - returns: The json data
      */
-    public func toJsonData(outputFormatting: JSONEncoder.OutputFormatting = [], dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate, dataEncodingStrategy: JSONEncoder.DataEncodingStrategy = .base64) -> Data? {
+    func toJsonData(outputFormatting: JSONEncoder.OutputFormatting = [], dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate, dataEncodingStrategy: JSONEncoder.DataEncodingStrategy = .base64) -> Data? {
         let encoder = JSONEncoder()
         encoder.outputFormatting = outputFormatting
         encoder.dateEncodingStrategy = dateEncodingStrategy
@@ -59,7 +59,7 @@ public extension Encodable {
      
      - returns: The json string
      */
-    public func toJsonString(outputFormatting: JSONEncoder.OutputFormatting = [], dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate, dataEncodingStrategy: JSONEncoder.DataEncodingStrategy = .base64) -> String? {
+    func toJsonString(outputFormatting: JSONEncoder.OutputFormatting = [], dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate, dataEncodingStrategy: JSONEncoder.DataEncodingStrategy = .base64) -> String? {
         let data = self.toJsonData(outputFormatting: outputFormatting, dateEncodingStrategy: dateEncodingStrategy, dataEncodingStrategy: dataEncodingStrategy)
         return data == nil ? nil : String(data: data!, encoding: .utf8)
     }
@@ -72,7 +72,7 @@ public extension Encodable {
      
      - returns: Nothing
      */
-    public func saveTo(_ fileURL: URL) throws {
+    func saveTo(_ fileURL: URL) throws {
         guard let data = self.toJsonData() else { throw CodingError.RuntimeError("cannot create data from object")}
         try data.write(to: fileURL, options: .atomic)
     }
@@ -85,7 +85,7 @@ public extension Encodable {
      
      - returns: Nothing
      */
-    public func saveToTemp(_ fileName: String) throws {
+    func saveToTemp(_ fileName: String) throws {
         let fileURL = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileName)
         try self.saveTo(fileURL)
     }
@@ -102,7 +102,7 @@ public extension Encodable {
      
      - returns: true if successfull
      */
-    public func saveToDocuments(_ fileName: String) throws {
+    func saveToDocuments(_ fileName: String) throws {
         let fileURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileName)
         try self.saveTo(fileURL)
     }
@@ -158,7 +158,7 @@ public extension Decodable {
      
      - parameter fileNameInTemp: The filename
      */
-    public init(fileURL: URL) throws {
+    init(fileURL: URL) throws {
         let data = try Data(contentsOf: fileURL)
         try self.init(data: data)
     }
@@ -168,7 +168,7 @@ public extension Decodable {
      
      - parameter fileNameInTemp: The filename
      */
-    public init(fileNameInTemp: String) throws {
+    init(fileNameInTemp: String) throws {
         let fileURL = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileNameInTemp)
         try self.init(fileURL: fileURL)
     }
@@ -178,7 +178,7 @@ public extension Decodable {
      
      - parameter fileNameInDocuments: The filename
      */
-    public init(fileNameInDocuments: String) throws {
+    init(fileNameInDocuments: String) throws {
         let fileURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileNameInDocuments)
         try self.init(fileURL: fileURL)
     }

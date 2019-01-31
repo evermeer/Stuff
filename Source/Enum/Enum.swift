@@ -31,18 +31,23 @@ public extension Enum {
     /**
      Get the associated value of the enum
      */
-    public var associated: (label: String, value: Any?) {
+    var associated: (label: String, value: Any?, values: [Any]) {
         get {
             let mirror = Mirror(reflecting: self)
             if mirror.displayStyle == .enum {
                 if let associated = mirror.children.first {
-                    return (associated.label!, associated.value)
+                    let values = Mirror(reflecting: associated.value).children
+                    var valuesArray = [Any]()
+                    for item in values {
+                        valuesArray.append(item.value)
+                    }
+                    return (associated.label!, associated.value, valuesArray)
                 }
                 print("WARNING: Enum option of \(self) does not have an associated value")
-                return ("\(self)", nil)
+                return ("\(self)", nil, [])
             }
             print("WARNING: You can only extend an enum with the EnumExtension")
-            return ("\(self)", nil)
+            return ("\(self)", nil, [])
         }
     }
 }
@@ -55,21 +60,21 @@ public extension Enum where Self: Hashable {
     /**
      Return all enum values
      */
-    public static var allValues: [Self] {
-        return Array(self.cases())
-    }
-    
-    static func cases() -> AnySequence<Self> {
-        typealias S = Self
-        return AnySequence { () -> AnyIterator<S> in
+    static var allValues: [Self] {
+        return [Self](AnySequence { () -> AnyIterator<Self> in
             var raw = 0
+            var first: Self?
             return AnyIterator {
-                let current : Self = withUnsafePointer(to: &raw) { $0.withMemoryRebound(to: S.self, capacity: 1) { $0.pointee } }
-                guard current.hashValue == raw else { return nil }
+                let current = withUnsafeBytes(of: &raw) { $0.load(as: Self.self) }
+                if raw == 0 {
+                    first = current
+                } else if current == first {
+                    return nil
+                }
                 raw += 1
                 return current
             }
-        }
+        })
     }
 }
 
@@ -81,7 +86,7 @@ public extension RawEnum where Self: RawRepresentable {
     /**
      Return the raw value of the enum
      */
-    public var anyRawValue: Any {
+    var anyRawValue: Any {
         get {
             let mirror = Mirror(reflecting: self)
             if mirror.displayStyle != .enum {
@@ -97,7 +102,7 @@ public extension RawEnum where Self: RawRepresentable {
  extension for creating a querystring from an array of Enum values (with associated value)
  */
 public extension Array where Element: Enum {
-    public var queryString: String {
+    var queryString: String {
         get {
             return (self.map {"\($0.associated.label)=\($0.associated.value!)"}).joined(separator: ",")
         }
