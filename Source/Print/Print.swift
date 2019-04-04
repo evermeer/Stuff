@@ -16,7 +16,7 @@ public extension Stuff {
     /**
      Enumeration of the log levels
      */
-    public enum logLevel: Int {
+    enum logLevel: Int {
         // Make sure all log events goes to the device log
         case productionLogAll = 0
         // Informational loging, lowest level
@@ -56,12 +56,12 @@ public extension Stuff {
     /**
      Set the minimum log level. By default set to .info which is the minimum. Everything will be loged.
      */
-    public static var minimumLogLevel: logLevel = .info
+    static var minimumLogLevel: logLevel = .info
 
     /**
      The print command for writing to the output window
      */
-    public static func print<T>(_ object: T, _ level: logLevel = (T.self is Error.Type ? .error : .debug), filename: String = #file, line: Int = #line, funcname: String = #function, trace: [String] = Thread.callStackSymbols)  {
+    static func print<T>(_ object: T, _ level: logLevel = (T.self is Error.Type ? .error : .debug), filename: String = #file, line: Int = #line, funcname: String = #function, trace: [String] = Thread.callStackSymbols)  {
         if level.rawValue >= Stuff.minimumLogLevel.rawValue {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MM/dd/yyyy HH:mm:ss:SSS"
@@ -70,9 +70,9 @@ public extension Stuff {
             let file = URL(string: filename)?.lastPathComponent ?? ""
             let traceOutput: String = trace.map { "\t\t\($0)" }.reduce("\n") { "\($0)\n\($1)" }
             let output: String =  object is Error ? "\((object as! Error).localizedDescription)\(traceOutput)" : "\(object)"
-            var logText = "\n\(level.description()) .\(level) ⏱ \(dateFormatter.string(from: Foundation.Date())) 📱 \(process.processName) [\(process.processIdentifier):\(threadId)] 📂 \(file)(\(line)) ⚙️ \(funcname) ➡️\r\t\(output)"
+            let logText = "\n\(level.description()) .\(level) ⏱ \(dateFormatter.string(from: Foundation.Date())) 📱 \(process.processName) [\(process.processIdentifier):\(threadId)] 📂 \(file)(\(line)) ⚙️ \(funcname) ➡️\r\t\(output)"
             if Stuff.minimumLogLevel == .productionLogAll {
-                if #available(iOSApplicationExtension 10.0, *) {
+                if #available(iOS 10.0, *) {
                     let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Stuff")
                     os_log("%{public}@", log: log, logText)
                 } else {
