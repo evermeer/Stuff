@@ -74,6 +74,8 @@ There is also a shortcut print statement for an error object. This will print th
 
 Update: From now on printing .error will also give you a stacktrace.
 
+Update 04-04-2019 : You can now also set the minimumLogLevel to productionLogAll. This will make sure you can also see the logging in the console (menu 'Window',  'Devices and Simulators', 'Open Console') In most cases you should only use this if you want to see logging for an app that you distributed using Testflight.
+
 ## Enum
 
 You can install this by adding the following line to your Podfile:

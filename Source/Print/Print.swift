@@ -6,16 +6,19 @@
 //
 
 import Foundation
+import os.log
 
 /**
  Extending the Stuff object with print functionality
  */
 public extension Stuff {
-    
+
     /**
      Enumeration of the log levels
      */
     public enum logLevel: Int {
+        // Make sure all log events goes to the device log
+        case productionLogAll = 0
         // Informational loging, lowest level
         case info = 1
         // Debug loging, default level
@@ -28,7 +31,7 @@ public extension Stuff {
         case fatal = 5
         // Set the minimumLogLevel to .none to stop everything from loging
         case none = 6
-        
+
         /**
          Get the emoticon for the log level.
          */
@@ -44,12 +47,12 @@ public extension Stuff {
                 return "🚫"
             case .fatal:
                 return "🆘"
-            case .none:
+            case .none, .productionLogAll:
                 return ""
             }
         }
     }
-    
+
     /**
      Set the minimum log level. By default set to .info which is the minimum. Everything will be loged.
      */
@@ -67,7 +70,17 @@ public extension Stuff {
             let file = URL(string: filename)?.lastPathComponent ?? ""
             let traceOutput: String = trace.map { "\t\t\($0)" }.reduce("\n") { "\($0)\n\($1)" }
             let output: String =  object is Error ? "\((object as! Error).localizedDescription)\(traceOutput)" : "\(object)"
-            Swift.print("\n\(level.description()) .\(level) ⏱ \(dateFormatter.string(from: Foundation.Date())) 📱 \(process.processName) [\(process.processIdentifier):\(threadId)] 📂 \(file)(\(line)) ⚙️ \(funcname) ➡️\r\t\(output)")
+            var logText = "\n\(level.description()) .\(level) ⏱ \(dateFormatter.string(from: Foundation.Date())) 📱 \(process.processName) [\(process.processIdentifier):\(threadId)] 📂 \(file)(\(line)) ⚙️ \(funcname) ➡️\r\t\(output)"
+            if Stuff.minimumLogLevel == .productionLogAll {
+                if #available(iOSApplicationExtension 10.0, *) {
+                    let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Stuff")
+                    os_log("%{public}@", log: log, logText)
+                } else {
+                    NSLog("#Stuff# /(logText)")
+                }
+            } else {
+                Swift.print(logText)
+            }
         }
     }
 }
