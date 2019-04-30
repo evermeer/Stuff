@@ -74,7 +74,7 @@ public extension Stuff {
             let output: String =  object is Error ? "\((object as! Error).localizedDescription)\(traceOutput)" : "\(object)"
             let logText = "\n\(level.description()) .\(level) ⏱ \(dateFormatter.string(from: Foundation.Date())) 📱 \(process.processName) [\(process.processIdentifier):\(threadId)] 📂 \(file)(\(line)) ⚙️ \(funcname) ➡️\r\t\(output)"
             if Stuff.minimumLogLevel == .productionLogAll || level == .productionLogAll {
-                if #available(iOS 10.0, *) {
+                if #available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3 , *) {
                     let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Stuff")
                     os_log("%{public}@", log: log, logText)
                 } else {
