@@ -63,14 +63,14 @@ public extension Stuff {
     /**
      The print command for writing to the output window
      */
-    static func print<T>(_ object: T, _ level: logLevel = (T.self is Error.Type ? .error : .debug), filename: String = #file, line: Int = #line, funcname: String = #function, trace: [String] = Thread.callStackSymbols)  {
+    static func print<T>(_ object: T, _ level: logLevel = (T.self is Error.Type ? .error : .debug), showTrace: Bool = false, filename: String = #file, line: Int = #line, funcname: String = #function, trace: [String] = Thread.callStackSymbols)  {
         if level.rawValue >= Stuff.minimumLogLevel.rawValue {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MM/dd/yyyy HH:mm:ss:SSS"
             let process = ProcessInfo.processInfo
             let threadId = Thread.current.name ?? ""
             let file = URL(string: filename)?.lastPathComponent ?? ""
-            let traceOutput: String = trace.map { "\t\t\($0)" }.reduce("\n") { "\($0)\n\($1)" }
+            let traceOutput: String = !showTrace ? "" : trace.map { "\t\t\($0)" }.reduce("\n") { "\($0)\n\($1)" }
             let output: String =  object is Error ? "\((object as! Error).localizedDescription)\(traceOutput)" : "\(object)"
             let logText = "\n\(level.description()) .\(level) ⏱ \(dateFormatter.string(from: Foundation.Date())) 📱 \(process.processName) [\(process.processIdentifier):\(threadId)] 📂 \(file)(\(line)) ⚙️ \(funcname) ➡️\r\t\(output)"
             if Stuff.minimumLogLevel == .productionLogAll || level == .productionLogAll {
