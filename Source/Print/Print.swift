@@ -63,7 +63,7 @@ public extension Stuff {
     /**
      The print command for writing to the output window
      */
-    static func print<T>(_ object: T, _ level: logLevel = (T.self is Error.Type ? .error : .debug), showTrace: Bool = false, filename: String = #file, line: Int = #line, funcname: String = #function, trace: [String] = Thread.callStackSymbols)  {
+    static func print<T>(_ object: T, _ level: logLevel = (T.self is Error ? .error : .debug), showTrace: Bool = false, filename: String = #file, line: Int = #line, funcname: String = #function, trace: [String] = Thread.callStackSymbols)  {
         if level.rawValue >= Stuff.minimumLogLevel.rawValue {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MM/dd/yyyy HH:mm:ss:SSS"
