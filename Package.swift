@@ -9,6 +9,12 @@
 import PackageDescription
 
 let packageName = "Stuff"
+let packageNameAll = packageName + "-All"
+let packageNamePrint = packageName + "-Print"
+let packageNameEnum = packageName + "-Enum"
+let packageNameTodo = packageName + "-TODO"
+let packageNameCoding = packageName + "-Coding"
+
 let package = Package(
     name: packageName,
     platforms: [
@@ -19,21 +25,53 @@ let package = Package(
     ],
     products: [
         .library(
-            name: packageName,
-            targets: [packageName]
-        )
+            name: packageNameAll,
+            targets: [packageNameAll]
+        ),
+        .library(
+            name: packageNamePrint,
+            targets: [packageNamePrint]
+        ),
+        .library(
+            name: packageNameEnum,
+            targets: [packageNameEnum]
+        ),
+        .library(
+            name: packageNameTodo,
+            targets: [packageNameTodo]
+        ),
+        .library(
+            name: packageNameCoding,
+            targets: [packageNameCoding]
+        ),
     ],
     dependencies: [
         // Stub
     ],
     targets: [
         .target(
-            name: packageName,
+            name: packageNameAll,
             path: "Source"
+        ),
+        .target(
+            name: packageNamePrint,
+            path: "Source/Print"
+        ),
+        .target(
+            name: packageNameEnum,
+            path: "Source/Enum"
+        ),
+        .target(
+            name: packageNameTodo,
+            path: "Source/TODO"
+        ),
+        .target(
+            name: packageNameCoding,
+            path: "Source/Codable"
         ),
         .testTarget(
             name: packageName + "Tests",
-            dependencies: [packageName],
+            dependencies: [packageNameAll],
             path: "StuffTests"
         )
     ]
