@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/sander/Documents/Github/Stuff/Package.swift">
+   </FileRef>
+   <FileRef
       location = "group:.gitignore">
    </FileRef>
    <FileRef
