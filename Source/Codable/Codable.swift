@@ -5,6 +5,7 @@
 //  Created by Edwin Vermeer on 28/06/2017.
 //  Copyright © 2017 EVICT BV. All rights reserved.
 //
+import Foundation
 
 enum CodingError : Error {
     case RuntimeError(String)
