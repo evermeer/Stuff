@@ -26,6 +26,8 @@ Stuff is a collection of code 'snippets' that are too small to create a library 
 - [TODO](#todo) - Adding a TODO helper function
 - [Codable](#codable) - Adding Codable helper functions (Swift 4)
 
+To install all parts via Swift Package Manager, add version `1.1.4` or higher with URL `https://github.com/evermeer/Stuff` to your project file. 
+
 ## Print
 
 You can install this by adding the following line to your Podfile:
