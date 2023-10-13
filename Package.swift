@@ -22,7 +22,7 @@ let package = Package(
     ],
     products: [
         .library(
-            name: packageNameAll,
+            name: packageName,
             targets: [packageNameAll]
         )
     ],
