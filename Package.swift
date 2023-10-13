@@ -10,7 +10,6 @@
 import PackageDescription
 
 let packageName = "Stuff"
-let packageNameAll = packageName + "-All"
 
 let package = Package(
     name: packageName,
@@ -23,17 +22,17 @@ let package = Package(
     products: [
         .library(
             name: packageName,
-            targets: [packageNameAll]
+            targets: [packageName]
         )
     ],
     targets: [
         .target(
-            name: packageNameAll,
+            name: packageName,
             path: "Source"
         ),
         .testTarget(
             name: packageName + "Tests",
-            dependencies: [.target(name: packageNameAll)],
+            dependencies: [.target(name: packageName)],
             path: "StuffTests"
         )
     ]
